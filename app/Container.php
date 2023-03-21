@@ -19,7 +19,7 @@ class Container
      */
     public static function singleton(string $abstract, ?string $concrete = null, mixed ...$params): mixed
     {
-        if(self::findSingleton($abstract) !== null) throw new Exception('This class is registered. ' . $abstract);
+        if(($instance = self::findSingleton($abstract)) !== null) return $instance;
 
         return self::$singletons[$abstract] = isset($concrete) ? new $concrete(...$params) : new $abstract(...$params);
     }

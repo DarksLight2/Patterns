@@ -16,11 +16,14 @@ use App\AbstractMethod\Notifications\Notificators\Email;
 use App\AbstractMethod\Notifications\Notificators\Telegram;
 use App\AbstractMethod\Notifications\Notificators\WhatsApp;
 use App\Container;
+use App\Strategy\Orders\DTOs\Contact;
+use App\Strategy\Orders\DTOs\Product;
+use App\Strategy\Orders\Order;
 
 require '../vendor/autoload.php';
 
 try {
-//    Abstract Factory (Payments)
+    // Abstract Factory (Payments)
 //    $payment = Container::handle(Payment::class);
 //
 //    $factories = [
@@ -34,15 +37,23 @@ try {
 //    }
 
     // Abstract Method (Notifications)
-    $notificator = Container::handle(Email::class);
-    $notificator->send(['example@mail.com', 'example2@mail.com'], 'Hello world!');
-    $notificator->send(['example@mail.com'], 'Hello world!');
+//    $notificator = Container::handle(Email::class);
+//    $notificator->send(['example@mail.com', 'example2@mail.com'], 'Hello world!');
+//    $notificator->send(['example@mail.com'], 'Hello world!');
+//
+//    $notificator = Container::handle(WhatsApp::class);
+//    $notificator->send(['+65562845'], 'Hello world!');
+//
+//    $notificator = Container::handle(Telegram::class);
+//    $notificator->send(['+65562845'], 'Hello world!');
 
-    $notificator = Container::handle(WhatsApp::class);
-    $notificator->send(['+65562845'], 'Hello world!');
+    // Strategy (Orders)
+    $products = Product::makeMany(2, withRandomParams: true);
+    $contact = new Contact(...['test@site.com', '+5343345554', '+5343345554']);
 
-    $notificator = Container::handle(Telegram::class);
-    $notificator->send(['+65562845'], 'Hello world!');
+    foreach ($products as $product) {
+        (new Order($product, $contact))->create();
+    }
 
 } catch (Exception $e) {
     echo $e->getMessage();
